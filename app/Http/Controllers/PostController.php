@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PostStoreRequest;
+use App\Http\Requests\PostUpdateRequest;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -21,13 +23,9 @@ class PostController extends Controller
         return Inertia::render('posts/create');
     }
 
-    public function store(Request $request)
+    public function store(PostStoreRequest $request)
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'body' => 'required|string',
-        ]);
-
+        $validated = $request->validated();
         $request->user()->posts()->create($validated);
 
         return to_route('posts.index');
@@ -40,12 +38,9 @@ class PostController extends Controller
         ]);
     }
 
-    public function update(Request $request, Post $post)
+    public function update(PostUpdateRequest $request, Post $post)
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'body' => 'required|string',
-        ]);
+        $validated = $request->validated();
 
         $post->update($validated);
 
