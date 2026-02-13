@@ -10,7 +10,7 @@ class PostController extends Controller
 {
     public function index()
     {
-        $posts = Post::with('user')->paginate(15);
+        $posts = Post::with('user')->latest()->paginate(15);
         return Inertia::render('posts/index', [
             'posts' => $posts,
         ]);

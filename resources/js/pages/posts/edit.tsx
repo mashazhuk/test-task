@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
+import postRoutes from '@/routes/posts';
 import type { BreadcrumbItem } from '@/types';
 
 interface Post {
@@ -28,11 +29,11 @@ export default function Edit({ post: initialPost }: Props) {
     const breadcrumbs: BreadcrumbItem[] = [
         {
             title: 'Posts',
-            href: '/posts',
+            href: postRoutes.index.url(),
         },
         {
             title: 'Edit post',
-            href: `/posts/${initialPost.id}/edit`,
+            href: postRoutes.edit(initialPost.id).url,
         },
     ];
 
@@ -43,7 +44,7 @@ export default function Edit({ post: initialPost }: Props) {
 
     const submit = (e: FormEvent) => {
         e.preventDefault();
-        put(`/posts/${initialPost.id}`);
+        put(postRoutes.update(initialPost.id).url);
     };
 
     return (

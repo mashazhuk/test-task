@@ -17,4 +17,4 @@ Route::get('dashboard', function () {
 
 Route::resource('posts', PostController::class)->middleware(['auth', 'verified']);
 
-require __DIR__.'/settings.php';
+require __DIR__ . '/settings.php';

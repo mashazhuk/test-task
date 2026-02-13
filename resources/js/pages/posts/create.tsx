@@ -12,16 +12,17 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
+import postRoutes from '@/routes/posts';
 import type { BreadcrumbItem } from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Posts',
-        href: '/posts',
+        href: postRoutes.index.url(),
     },
     {
         title: 'Create post',
-        href: '/posts/create',
+        href: postRoutes.create.url(),
     },
 ];
 
@@ -33,7 +34,7 @@ export default function Create() {
 
     const submit = (e: FormEvent) => {
         e.preventDefault();
-        post('/posts');
+        post(postRoutes.store.url());
     };
 
     return (

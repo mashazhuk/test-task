@@ -10,7 +10,7 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
-import { dashboard } from '@/routes';
+import postRoutes from '@/routes/posts';
 import type { BreadcrumbItem, Post } from '@/types';
 
 interface PaginationLinks {
@@ -33,19 +33,15 @@ interface Props {
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Dashboard',
-        href: dashboard().url,
-    },
-    {
         title: 'Posts',
-        href: '/posts',
+        href: postRoutes.index.url(),
     },
 ];
 
 export default function Posts({ posts }: Props) {
     const handleDelete = (id: number) => {
         if (confirm('Are you sure you want to delete this post?')) {
-            router.delete(`/posts/${id}`);
+            router.delete(postRoutes.destroy(id).url);
         }
     };
 
@@ -56,7 +52,7 @@ export default function Posts({ posts }: Props) {
                 <div className="flex items-center justify-between">
                     <h1 className="text-2xl font-bold tracking-tight">Posts</h1>
                     <Button asChild>
-                        <Link href="/posts/create">
+                        <Link href={postRoutes.create().url}>
                             <Plus className="mr-2 h-4 w-4" /> Create post
                         </Link>
                     </Button>
@@ -88,7 +84,9 @@ export default function Posts({ posts }: Props) {
                                         size="icon"
                                         asChild
                                     >
-                                        <Link href={`/posts/${post.id}/edit`}>
+                                        <Link
+                                            href={postRoutes.edit(post.id).url}
+                                        >
                                             <Pencil className="h-4 w-4" />
                                         </Link>
                                     </Button>
