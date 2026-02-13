@@ -1,4 +1,4 @@
-interface Post {
+export type Post = {
     id: number;
     title: string;
     body: string;
@@ -6,4 +6,4 @@ interface Post {
     user?: {
         name: string;
     };
-}
+};

@@ -1,8 +1,6 @@
-import { Head, Link } from '@inertiajs/react';
-import AppLayout from '@/layouts/app-layout';
-import type { BreadcrumbItem } from '@/types';
-import { dashboard } from '@/routes';
-
+import { Head, Link, router } from '@inertiajs/react';
+import { Plus, Pencil, Trash } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import {
     Card,
     CardContent,
@@ -10,9 +8,10 @@ import {
     CardFooter,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import PostCard from '@/components/post-card';
+} from '@/components/ui/card';
+import AppLayout from '@/layouts/app-layout';
+import { dashboard } from '@/routes';
+import type { BreadcrumbItem, Post } from '@/types';
 
 interface PaginationLinks {
     url: string | null;
@@ -44,28 +43,86 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function Posts({ posts }: Props) {
+    const handleDelete = (id: number) => {
+        if (confirm('Are you sure you want to delete this post?')) {
+            router.delete(`/posts/${id}`);
+        }
+    };
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Posts" />
             <div className="flex h-full flex-1 flex-col gap-4 p-4">
+                <div className="flex items-center justify-between">
+                    <h1 className="text-2xl font-bold tracking-tight">Posts</h1>
+                    <Button asChild>
+                        <Link href="/posts/create">
+                            <Plus className="mr-2 h-4 w-4" /> Create post
+                        </Link>
+                    </Button>
+                </div>
+
                 <div className="grid auto-rows-min gap-4 md:grid-cols-2 lg:grid-cols-3">
                     {posts.data.map((post) => (
-                        <PostCard post={post} key={post.id} />
+                        <Card key={post.id} className="flex flex-col">
+                            <CardHeader>
+                                <CardTitle>{post.title}</CardTitle>
+                                <CardDescription>
+                                    {post.user?.name || 'Unknown'}
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent className="flex-1">
+                                <p className="line-clamp-3 text-sm text-muted-foreground">
+                                    {post.body}
+                                </p>
+                            </CardContent>
+                            <CardFooter className="flex items-center justify-between">
+                                <span className="text-xs text-muted-foreground">
+                                    {new Date(
+                                        post.created_at,
+                                    ).toLocaleDateString()}
+                                </span>
+                                <div className="flex gap-2">
+                                    <Button
+                                        variant="outline"
+                                        size="icon"
+                                        asChild
+                                    >
+                                        <Link href={`/posts/${post.id}/edit`}>
+                                            <Pencil className="h-4 w-4" />
+                                        </Link>
+                                    </Button>
+                                    <Button
+                                        variant="destructive"
+                                        size="icon"
+                                        onClick={() => handleDelete(post.id)}
+                                    >
+                                        <Trash className="h-4 w-4" />
+                                    </Button>
+                                </div>
+                            </CardFooter>
+                        </Card>
                     ))}
                 </div>
 
                 {posts.links.length > 3 && (
                     <div className="mt-6 flex flex-wrap justify-center gap-2">
-                        {posts.links.map((link, i) => (
+                        {posts.links.map((link, i) =>
                             link.url ? (
                                 <Button
                                     key={i}
-                                    variant={link.active ? "default" : "outline"}
+                                    variant={
+                                        link.active ? 'default' : 'outline'
+                                    }
                                     size="sm"
                                     asChild
                                 >
                                     <Link href={link.url}>
-                                        <span dangerouslySetInnerHTML={{ __html: link.label }} />
+                                        <span
+                                            dangerouslySetInnerHTML={{
+                                                __html: link.label,
+                                            }}
+                                        />
                                     </Link>
                                 </Button>
                             ) : (
@@ -75,10 +132,14 @@ export default function Posts({ posts }: Props) {
                                     size="sm"
                                     disabled
                                 >
-                                    <span dangerouslySetInnerHTML={{ __html: link.label }} />
+                                    <span
+                                        dangerouslySetInnerHTML={{
+                                            __html: link.label,
+                                        }}
+                                    />
                                 </Button>
-                            )
-                        ))}
+                            ),
+                        )}
                     </div>
                 )}
             </div>
