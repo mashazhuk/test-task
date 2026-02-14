@@ -10,11 +10,28 @@ use Inertia\Inertia;
 
 class PostController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $posts = Post::with('user')->latest()->paginate(15);
+        $query = Post::with('user');
+
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                    ->orWhere('body', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('user_id')) {
+            $query->where('user_id', $request->input('user_id'));
+        }
+
+        $posts = $query->latest()->paginate(15)->withQueryString();
+
         return Inertia::render('posts/index', [
             'posts' => $posts,
+            'filters' => $request->only(['search', 'user_id']),
+            'users' => \App\Models\User::select('id', 'name')->orderBy('name')->get(),
         ]);
     }
 

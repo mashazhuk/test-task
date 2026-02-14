@@ -4,11 +4,15 @@
 
 - **User authentication** - Powered by Laravel Fortify with Sanctum
 - **Post management** - Full CRUD operations (Create, Read, Update, Delete)
+- **Search functionality** - Search posts by title or content
+- **Filter by author** - Filter posts by specific user
+- **Pagination** - Automatic pagination for large datasets (15 posts per page)
 - **Modern UI** - Built with React 19 and shadcn/ui components
 - **Real-time updates** - Inertia.js for seamless SPA experience
 - **Responsive design** - Mobile-friendly interface
 - **Form validation** - Both client and server-side validation
 - **User profiles** - User settings and profile management
+- **Comprehensive tests** - Unit and feature tests with 64 passing tests
 
 ## Requirements
 
@@ -99,6 +103,16 @@ http://localhost:8000
 npm run lint         # Run ESLint
 npm run format       # Format code with Prettier
 composer pint        # Format PHP code with Laravel Pint
+```
+
+### Testing
+
+```bash
+php artisan test              # Run all tests
+php artisan test --testsuite=Unit     # Run only unit tests
+php artisan test --testsuite=Feature  # Run only feature tests
+php artisan test --filter=PostTest    # Run specific test class
+php artisan test --coverage           # Run tests with coverage report
 ```
 
 ### Database
